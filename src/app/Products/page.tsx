@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 type Product = {
@@ -32,7 +32,7 @@ const products: Product[] = [
   { id: 14, name: "Story Book Pack", price: "\u20B9399", image: "https://picsum.photos/seed/p14/400/400", category: "Books" },
 ];
 
-export default function Products() {
+function ProductsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedCategory = searchParams.get("category");
@@ -107,5 +107,13 @@ export default function Products() {
         <p className="mt-6 text-sm text-gray-500">No products found for this category.</p>
       ) : null}
     </div>
+  );
+}
+
+export default function Products() {
+  return (
+    <Suspense fallback={<div className="mx-auto max-w-7xl px-6 py-8 text-sm text-gray-500">Loading products...</div>}>
+      <ProductsContent />
+    </Suspense>
   );
 }
