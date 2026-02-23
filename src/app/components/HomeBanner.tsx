@@ -34,6 +34,7 @@ const slides = [
 
 export default function HomeBanner() {
   return (
+    <>
     <section className="mb-8">
       <Swiper
         modules={[Autoplay, Pagination]}
@@ -68,5 +69,6 @@ export default function HomeBanner() {
         ))}
       </Swiper>
     </section>
+    </>
   );
 }

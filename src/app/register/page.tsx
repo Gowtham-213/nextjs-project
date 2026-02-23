@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 
 type ShopUser = {
   name: string;
@@ -10,10 +10,11 @@ type ShopUser = {
   password: string;
 };
 
-export default function RegisterPage() {
+function RegisterContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,6 +28,7 @@ export default function RegisterPage() {
 
     const rawUsers = localStorage.getItem("shopUsers");
     const users: ShopUser[] = rawUsers ? JSON.parse(rawUsers) : [];
+
     const emailExists = users.some((item) => item.email === email);
 
     if (emailExists) {
@@ -35,8 +37,10 @@ export default function RegisterPage() {
     }
 
     const newUsers = [...users, { name, email, password }];
+
     localStorage.setItem("shopUsers", JSON.stringify(newUsers));
     localStorage.setItem("shopUser", JSON.stringify({ name, email }));
+
     router.push(redirectTo);
   };
 
@@ -53,6 +57,7 @@ export default function RegisterPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
+
           <input
             type="email"
             placeholder="Email"
@@ -60,6 +65,7 @@ export default function RegisterPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+
           <input
             type="password"
             placeholder="Password"
@@ -80,11 +86,22 @@ export default function RegisterPage() {
 
         <p className="mt-4 text-sm text-gray-600">
           Already have an account?{" "}
-          <Link href={`/login?redirect=${encodeURIComponent(redirectTo)}`} className="text-blue-600">
+          <Link
+            href={`/login?redirect=${encodeURIComponent(redirectTo)}`}
+            className="text-blue-600"
+          >
             Login
           </Link>
         </p>
       </div>
     </main>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RegisterContent />
+    </Suspense>
   );
 }
