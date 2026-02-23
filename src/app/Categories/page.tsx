@@ -52,7 +52,7 @@ export default function CategoriesPage() {
         {categories.map((category) => (
           <Link
             key={category.id}
-            href={`/categories/${category.name.toLowerCase().replace(/\s+/g, "-")}`}
+            href={`/Products?category=${encodeURIComponent(category.name)}`}
             className="bg-white rounded-lg overflow-hidden shadow transition block"
           >
             <img
